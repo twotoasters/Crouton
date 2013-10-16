@@ -823,7 +823,7 @@ public final class Crouton {
   private RelativeLayout initializeContentView(final Resources resources) {
     RelativeLayout contentView = new RelativeLayout(this.activity);
     contentView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-      RelativeLayout.LayoutParams.WRAP_CONTENT));
+      RelativeLayout.LayoutParams.MATCH_PARENT));
 
     // set padding
     int padding = this.style.paddingInPixels;
@@ -839,7 +839,9 @@ public final class Crouton {
     ImageView image = null;
     if ((null != this.style.imageDrawable) || (0 != this.style.imageResId)) {
       image = initializeImageView();
-      contentView.addView(image, image.getLayoutParams());
+      RelativeLayout.LayoutParams imageParams = (RelativeLayout.LayoutParams) image.getLayoutParams();
+      imageParams.addRule(RelativeLayout.CENTER_VERTICAL);
+      contentView.addView(image, imageParams);
     }
 
     TextView text = initializeTextView(resources);
@@ -849,6 +851,7 @@ public final class Crouton {
     if (null != image) {
       textParams.addRule(RelativeLayout.RIGHT_OF, image.getId());
     }
+    textParams.addRule(RelativeLayout.CENTER_VERTICAL);
     contentView.addView(text, textParams);
     return contentView;
   }
