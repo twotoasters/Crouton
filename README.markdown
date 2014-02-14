@@ -1,5 +1,5 @@
 # Crouton
-![Crouton](https://raw.github.com/keyboardsurfer/Crouton/master/sample/res/drawable-xhdpi/ic_launcher.png "Crouton logo")
+![Crouton](https://raw.github.com/keyboardsurfer/Crouton/master/sample/src/main/res/drawable-xhdpi/ic_launcher.png "Crouton logo")
 
 Context sensitive notifications for Android
 
@@ -8,7 +8,7 @@ Context sensitive notifications for Android
 **Crouton** is a class that can be used by Android developers that feel the need for an **alternative to the Context insensitive [Toast](http://developer.android.com/reference/android/widget/Toast.html)**.
 
 A Crouton will be displayed at the position the developer decides.
-Standard will be the of an application window.
+Standard will be the top of an application window.
 You can line up multiple Croutons for display, that will be shown one after another.
 
 You can check some features in the Crouton Demo.
@@ -20,41 +20,8 @@ You can check some features in the Crouton Demo.
 
 If you're already using Crouton and just want to download the latest version of the library, follow [this link](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22de.keyboardsurfer.android.widget%22).
 
-### Changelog
-#### Current version: 1.8.1
-
-####[1.8](https://github.com/keyboardsurfer/Crouton/tree/1.8)
-
-- Improves support for custom views
-- Smoothing out animations for multiple line Croutons
-- Cleans up Style
-  - Configuration is now available for non-UI information
-  - Style only holds UI-relevant information
-- Introduces DURATION_SHORT and DURATION_LONG constants
-
-####[1.7](https://github.com/keyboardsurfer/Crouton/tree/1.7)
-
-- `Crouton.setOnClickListener(OnClickListener)` has been introduced.
-- Infinite display of Crouton is possible via `Style.setDuration(Style.DURATION_INFINITE)`
-- Via `Crouton.hide(Crouton)` a Crouton can be hidden.
-
-####[1.6](https://github.com/keyboardsurfer/Crouton/tree/1.6)
-
-- Crouton now can be used on any Android device with **API level 4+**.
-- Changes the package name to `de.keyboardsurfer.android.widget`
-- Adds possibility to set a custom width
-- Can now be added to any ViewGroup (@coreform)
-- Integration with TalkBack (@coreform)
-- Adds Accessibility features (@coreform)
-- Fixes bug that got Crouton out of sync with reality (@coreform)
-- New [LifecycleCallback](https://github.com/keyboardsurfer/Crouton/blob/master/library/src/de/keyboardsurfer/android/widget/crouton/LifecycleCallback.java) (@coreform)
-- initializeCroutonView was refactored, to make it easier on the eyes
-- removes redundant initialization within Style.Builder
-- documentation improvments
-
-#### older versions
-
-Please see the `git log`
+## [Changelog](https://github.com/keyboardsurfer/Crouton/wiki/Changelog)
+### Current version: 1.8.3
 
 ## Usage
 
@@ -62,15 +29,19 @@ The API is kept as simple as the Toast API:
 
 Create a Crouton for any CharSequence:
 
-    Crouton.makeText(Activity, CharSequence, [Style]).show();
+    Crouton.makeText(Activity, CharSequence, Style).show();
     
 Create a Crouton with a String from your application's resources:
 
     Crouton.makeText(Activity, int, Style).show();
     
-Further you can attach a Crouton to any view like this:
+Further you can attach a Crouton to any ViewGroup like this:
 
     Crouton.makeText(Activity, int, Style, int).show();
+
+    Crouton.makeText(Activity, int, Style, ViewGroup).show();
+    
+Also `Crouton.show(...)` methods are available for convenient fire and forget display of Croutons. 
 
 If you would like a more graphical introduction to Crouton check out [this presentation](https://speakerdeck.com/keyboardsurfer/crouton-devfest-berlin-2012).
 
@@ -110,19 +81,49 @@ In general you can modify
 
 Since [Style](https://github.com/keyboardsurfer/Crouton/blob/master/library/src/de/keyboardsurfer/android/widget/crouton/Style.java) is the general entry point for tweaking Croutons, go and see for yourself what can be done with it.
 
+## Building
+### Gradle
 
-## Maven
+#### From maven central
 
-### From maven central
+Add maven central to your `build.gradle`:
 
-Crouton is available in the maven central repository.
+```groovy
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+}
+ 
+repositories {
+  mavenCentral()
+}
+```
 
-To use crouton simply add
+Then declare Crouton within your dependencies:
+
+```groovy
+dependencies {
+  ...
+  compile('de.keyboardsurfer.android.widget:crouton:1.8.3') {
+    // exclusion is not neccessary, but generally a good idea.
+    exclude group: 'com.google.android', module: 'support-v4'
+  }
+  ...
+}
+```
+
+
+### Maven
+
+#### From maven central
+
+To use crouton within your maven build simply add
 
 ```xml
 <dependency>
   <artifactId>crouton</artifactId>
-  <version>1.7</version>
+  <version>${crouton.version}</version>
   <groupId>de.keyboardsurfer.android.widget</groupId>
 </dependency>
 ```
@@ -160,21 +161,46 @@ If you are referencing a newer version of the Android Support Library in your ap
 
 ### DIY
 
-The build requires Maven. Operations are very simple:
+The build requires Gradle. Operations are very simple:
 
-* `mvn -f library/pom.xml clean package` will build a `jar` library;
-* `mvn clean package` will build a `jar` library and the sample application `apk`;
-* `mvn -f library/pom.xml clean install` will put Crouton in your local Maven repository.
+* install [gradle](http://www.gradle.org/)
+* `gradle assemble` builds all artifacts
+* `gradle jar` builds the jar
 
-After putting Crouton in the repository you can add it as a dependency.
+After putting Crouton in a repository you can add it as dependency.
 
-```xml
-<dependency>
-  <artifactId>crouton</artifactId>
-  <version>${crouton.version}</version>
-  <groupId>de.keyboardsurfer.android.widget</groupId>
-</dependency>
+```gradle
+compile('de.keyboardsurfer.android.widget:crouton:1.8.3') {
+  exclude group: 'com.google.android', module: 'support-v4'
+}
 ```
+
+###Signing
+
+To sign your artifacts, create a file at the repository root, called `gradle.properties` that contains:
+
+
+```
+# makes building faster
+org.gradle.daemon true
+
+# only requried for the demo
+keyStore=theKeyStoreFileName
+storePassword=theStorePassword
+keyAlias=theKeyAlias
+keyPassword=theKeyPassword
+
+# for uploading to a repository
+repositoryUrl=yourRepositoryUrl
+sonatypeUser=yourSonatypeUser
+sonatypePass=yourSonatypePassword
+
+# if you want to sign the built artifacts
+signing.keyId=yourKeyId
+signing.password=yourGPGPassword
+signing.secretKeyRingFile=/path/to/your/secring
+```
+
 
 ## Contribution
 
@@ -191,6 +217,8 @@ Either you found a bug or have created a new and awesome feature, just create a 
 If you want to start to create a new feature or have any other questions regarding Crouton, [file an issue](https://github.com/keyboardsurfer/Crouton/issues/new).
 I'll try to answer as soon as I find the time.
 
+Please note, if you're working on a pull request, make sure to use the [develop branch](https://github.com/keyboardsurfer/Crouton/tree/develop) as your base.
+
 ### Formatting
 
 For contributors using Eclipse there's a formatter available at the [download section](https://github.com/downloads/keyboardsurfer/Crouton/Crouton_Eclipseformatter.xml).
@@ -205,8 +233,7 @@ If you're using IDEA, the Eclipse Formatter plugin should allow you to use the f
 
 ## Attributions
 
-The initial version was written by  <a href="https://plus.google.com/u/0/117509657298845443204?rel=author">Benjamin Weiss</a> at [Neofonie Mobile GmbH](http://mobile.neofonie.de).
-
+The initial version was written by  <a href="https://plus.google.com/u/0/117509657298845443204?rel=author">Benjamin Weiss</a>.
 The name and the idea of [Crouton](https://github.com/keyboardsurfer/Crouton/blob/master/library/src/de/keyboardsurfer/android/widget/crouton/Crouton.java) originates in a [blog article](http://android.cyrilmottier.com/?p=773) by Cyril Mottier.
 
 The Crouton logo has been created by [Marie Schweiz](http://marie-schweiz.de).

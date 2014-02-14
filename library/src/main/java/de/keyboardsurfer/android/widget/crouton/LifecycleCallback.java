@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
+package de.keyboardsurfer.android.widget.crouton;
 
+/** Provides callback methods on major lifecycle events of a {@link Crouton}. */
+public interface LifecycleCallback {
+  /** Will be called when your Crouton has been displayed. */
+  public void onDisplayed();
 
-subprojects {
+  /** Will be called when your {@link Crouton} has been removed. */
+  public void onRemoved();
 
-  buildscript {
-    repositories {
-      mavenCentral()
-      mavenLocal()
-    }
-
-    dependencies {
-      classpath 'com.android.tools.build:gradle:0.8+'
-      classpath 'com.github.dcendents:android-maven-plugin:1.0'
-    }
-  }
-
-  repositories {
-    mavenCentral()
-    mavenLocal()
-  }
-
+  //public void onCeasarDressing();
 }
